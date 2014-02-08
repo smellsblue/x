@@ -1,6 +1,14 @@
 module X
   module Action
     module ClassMethods
+      def description(value = nil)
+        if value.nil?
+          @description
+        else
+          @description = value
+        end
+      end
+
       def keyword(value = nil)
         if value.nil?
           @keyword
