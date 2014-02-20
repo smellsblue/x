@@ -19,6 +19,14 @@ module X
         end
       end
 
+      def help(value = nil)
+        if value.nil?
+          @help
+        else
+          @help = value
+        end
+      end
+
       def keyword(value = nil)
         if value.nil?
           @keyword
