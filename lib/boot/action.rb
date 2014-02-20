@@ -1,6 +1,16 @@
 module X
   module Action
     module ClassMethods
+      def bash_completion(*args, &fn)
+        if fn
+          @bash_completion = fn
+        elsif @bash_completion
+          @bash_completion.call *args
+        else
+          []
+        end
+      end
+
       def description(value = nil)
         if value.nil?
           @description
@@ -29,6 +39,20 @@ module X
 
       def all_sorted
         all.sort_by &:keyword
+      end
+
+      def completion_for(args)
+        command = args.shift || ""
+
+        if args.empty?
+          all.map(&:keyword).select do |keyword|
+            keyword =~ /^#{Regexp.escape command}/
+          end
+        else
+          action = X::Action[command]
+          return [] unless action
+          action.bash_completion(args) || []
+        end
       end
 
       def included(other)
