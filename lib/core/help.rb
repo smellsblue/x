@@ -3,6 +3,16 @@ module X
     include X::Action
     keyword "help"
 
+    bash_completion do |args|
+      if args.length <= 1
+        word = args.first || ""
+
+        Action.all.map(&:keyword).select do |keyword|
+          keyword =~ /^#{Regexp.escape word}/
+        end
+      end
+    end
+
     def described_actions
       X::Action.all_sorted.map do |x|
         [x.keyword, x.description]
